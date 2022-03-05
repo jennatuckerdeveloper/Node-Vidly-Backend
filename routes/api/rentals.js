@@ -71,7 +71,7 @@ router.post('/', auth, async (req, res) => {
 	try {
 		new Fawn.Task()
 			.save('rentals', newRental)
-			.update('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
+			.updateOne('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
 			.run()
 	} catch (ex) {
 		console.log(ex)

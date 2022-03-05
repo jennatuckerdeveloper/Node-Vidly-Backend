@@ -32,8 +32,8 @@ router.post('/', async (req, res) => {
 	const data = req.body
 	if (invalidUserData(data, res)) return
 
-	// const userIsFound = await userFound(data, res)
-	// if (userIsFound) return
+	const userIsFound = await userFound(data, res)
+	if (userIsFound) return
 
 	const newUser = new User(_.pick(data, ['name', 'email']))
 	const salt = await bcrypt.genSalt()

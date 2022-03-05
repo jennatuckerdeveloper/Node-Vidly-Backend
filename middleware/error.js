@@ -1,5 +1,8 @@
-const error = (err, req, res, next) => {
-	res.status(500).send('Unexpected error.')
+const error = (logger) => {
+	return (err, req, res, next) => {
+		logger.log('error', err.message, { metadata: err })
+		res.status(500).send('Unexpected error.')
+	}
 }
 
 module.exports = error

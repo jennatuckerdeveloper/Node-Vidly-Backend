@@ -1,3 +1,4 @@
 {
-	"name": "Vidly API"
+	"name": "Vidly API",
+	"jwtPrivateKey": ""
 }

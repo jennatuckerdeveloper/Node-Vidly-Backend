@@ -8,9 +8,9 @@ const auth = (req, res, next) => {
 	try {
 		const decoded = jwt.verify(token, config.get('jwtPrivateKey'))
 		req.user = decoded
-		next()
+		return next()
 	} catch (ex) {
-		res.status(401).send('Access denied: Invalid auth token provided.')
+		return res.status(401).send('Access denied: Invalid auth token provided.')
 	}
 }
 

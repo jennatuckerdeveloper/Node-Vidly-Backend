@@ -1,14 +1,14 @@
 const request = require('supertest')
 const mongoose = require('mongoose')
-const { Genre } = require('../../../../db/models/Genre')
-const { User } = require('../../../../db/models/User')
+const { Genre } = require('../../../db/models/Genre')
+const { User } = require('../../../db/models/User')
 const genreUrl = '/api/genres'
 
 describe('Tests for genres api.', () => {
 	let server
 	const validGenreData = [{ name: 'genre1' }, { name: 'genre2' }]
 	beforeEach(async () => {
-		server = require('../../../../index.js')
+		server = require('../../../index.js')
 	})
 
 	afterEach(async () => {

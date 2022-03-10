@@ -116,6 +116,7 @@ describe('Tests for genres api.', () => {
 			})
 			token = validUser.generateAuthToken()
 			const res = await exec()
+			expect(res.status).toBe(403)
 			expect(res.text).toMatch(/^.*?\b(no)(?:(|t)?)\b.*?\badmin\b.*?$/im)
 		})
 	})

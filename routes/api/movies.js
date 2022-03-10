@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../../middleware/auth')
-const admin = require('../../middleware/auth')
+const admin = require('../../middleware/admin')
+const validId = require('../../middleware/validId')
 const { Movie, movieValidator } = require('../../db/models/Movie')
 const { Genre } = require('../../db/models/Genre')
-const { dbIdValidator } = require('../../db/models/dbIdValidator')
 
 // resusable helpers
 
@@ -51,9 +51,8 @@ router.get('/', async (req, res) => {
 	res.send(movies)
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validId, async (req, res) => {
 	const id = req.params.id
-	if (inValidMovieId(id, res)) return
 	const movie = await movieFound(id, res)
 	if (!movie) return
 	res.send(movie)
@@ -75,9 +74,8 @@ router.post('/', [auth, admin], async (req, res) => {
 	res.send(newMovie)
 })
 
-router.put('/:id', [auth, admin], async (req, res) => {
+router.put('/:id', [auth, admin, validId], async (req, res) => {
 	const id = req.params.id
-	if (inValidMovieId(id, res)) return
 	const data = req.body
 	if (invalidMovieData(data, res)) return
 
@@ -100,9 +98,8 @@ router.put('/:id', [auth, admin], async (req, res) => {
 	res.send(updatedMovie)
 })
 
-router.delete('/:id', [auth, admin], async (req, res) => {
+router.delete('/:id', [auth, admin, validId], async (req, res) => {
 	const id = req.params.id
-	if (inValidMovieId(id, res)) return
 	const movie = await movieFound(id, res)
 	if (!movie) return
 	const deletedMovie = await Movie.findByIdAndDelete(id)

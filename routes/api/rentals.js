@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../../middleware/auth')
-const admin = require('../../middleware/auth')
+const admin = require('../../middleware/admin')
 const { Rental, rentalValidator } = require('../../db/models/Rental')
 const { Movie } = require('../../db/models/Movie')
 const { Customer } = require('../../db/models/Customer')
@@ -28,7 +28,7 @@ const movieFound = async (id, res) => {
 const customerFound = async (id, res) => {
 	const movie = await Customer.findById(id)
 	if (!movie) {
-		res.status(404).send(`Could not find movie with id ${id}.`)
+		res.status(404).send(`Could not find customer with id ${id}.`)
 		return false
 	}
 	return movie
@@ -71,7 +71,7 @@ router.post('/', auth, async (req, res) => {
 	try {
 		new Fawn.Task()
 			.save('rentals', newRental)
-			.updateOne('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
+			.update('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
 			.run()
 	} catch (ex) {
 		console.log(ex)

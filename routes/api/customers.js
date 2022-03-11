@@ -1,19 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const { Customer, customerValidator } = require('../../db/models/Customer')
-const { dbIdValidator } = require('../../db/models/dbIdValidator')
+const validId = require('../../middleware/validId')
 
 router.get('/', async (req, res) => {
 	const customers = await Customer.find({}).sort('name')
 	res.send(customers)
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validId, async (req, res) => {
 	const id = req.params.id
-	const isValid = dbIdValidator(id)
-	if (!isValid) {
-		return res.status(400).send('Not a valid customer id.')
-	}
 	const customer = await Customer.findById(id)
 	if (!customer) {
 		return res.status(404).send(`Cannot find customer with id ${id}`)
@@ -32,12 +28,8 @@ router.post('/', async (req, res) => {
 	res.send(newCustomer)
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validId, async (req, res) => {
 	const id = req.params.id
-	const isValid = dbIdValidator(id)
-	if (!isValid) {
-		return res.status(400).send(`Not a valid customer id.`)
-	}
 	const data = req.body
 	const dataValidation = customerValidator(data)
 	if (dataValidation.error) {
@@ -52,12 +44,8 @@ router.put('/:id', async (req, res) => {
 	res.send(updatedCustomer)
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validId, async (req, res) => {
 	const id = req.params.id
-	const isValid = dbIdValidator(id)
-	if (!isValid) {
-		return res.status(400).send('Not a valid customer id.')
-	}
 	const deletedCustomer = await Customer.findByIdAndDelete(id)
 	if (!deletedCustomer) {
 		return res.status(404).send(`Could not delete customer with id ${id}.`)

@@ -6,13 +6,15 @@ const CustomerSchema = mongoose.Schema({
 		type: String,
 		required: true,
 		trim: true,
-		minLength: 3
+		minLength: 1,
+		maxLength: 255
 	},
 	phone: {
 		type: String,
 		required: true,
 		trim: true,
-		minLength: 7
+		minLength: 7,
+		maxLength: 255
 	},
 	isGold: {
 		type: Boolean,
@@ -26,7 +28,7 @@ const customerValidator = (data) => {
 	const joiOptions = { abortEarly: false }
 
 	const customerSchema = Joi.object({
-		name: Joi.string().required().min(3),
+		name: Joi.string().required().min(1),
 		phone: Joi.string().required().min(7),
 		isGold: Joi.bool()
 	})

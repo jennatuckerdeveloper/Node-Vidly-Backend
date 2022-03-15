@@ -69,10 +69,14 @@ router.post('/', auth, async (req, res) => {
 	})
 
 	try {
-		new Fawn.Task()
-			.save('rentals', newRental)
-			.update('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
-			.run()
+		const task = new Fawn.Task()
+		await task.save('rentals', newRental)
+		await task.update(
+			'movies',
+			{ _id: movie._id },
+			{ $inc: { numberInStock: -1 } }
+		)
+		await task.run()
 	} catch (ex) {
 		console.log(ex)
 		return res.status(500).send('Unexpected failure.')

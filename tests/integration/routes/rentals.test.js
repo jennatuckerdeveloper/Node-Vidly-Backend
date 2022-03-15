@@ -209,6 +209,15 @@ describe('rentals api', () => {
 				isGold: customer.isGold
 			})
 		})
+
+		it('changes the rented movie numberInStock to one fewer', async () => {
+			// Run twice on a movie with only 1 in stock
+			await exec()
+			const res = await exec()
+			expect(res.status).toBe(400)
+			expect(res.text).toMatch(/^.*?\bnot\b.*?\bin\b.*?\bstock\b.*?$/im)
+		})
+
 		it('returns 400 when invalid rental data sent', async () => {
 			rentalData = {}
 			const res = await exec()
@@ -216,14 +225,21 @@ describe('rentals api', () => {
 			expect(res.text).toMatch(/^.*?\bmovieId\b.*?\brequired\b.*?$/im)
 			expect(res.text).toMatch(/^.*?\bcustomerId\b.*?\brequired\b.*?$/im)
 		})
-		// it('responds with 400 if movie not in stock', async () => {
-		// 	// Rent movie with 1 in stock
-		// 	console.log(movie)
-		// 	await exec()
-		// 	console.log(movie)
-		// 	const res = await exec()
-		// 	expect(res.status).toBe(400)
-		// })
+		it('responds with 400 if movie not in stock', async () => {
+			// Rent movie with 1 in stock
+			const newGenre = new Genre({ name: 'indie' })
+			await newGenre.save()
+			const outOfStockMovie = new Movie({
+				title: 'First Cow',
+				genre: newGenre,
+				numberInStock: 0,
+				dailyRentalRate: 3.0
+			})
+			await outOfStockMovie.save()
+			rentalData.movieId = outOfStockMovie._id.toHexString()
+			const res = await exec()
+			expect(res.status).toBe(400)
+		})
 		it('responds with 404 if customer not found wtih valid id', async () => {
 			rentalData.customerId = voidId
 			const res = await exec()

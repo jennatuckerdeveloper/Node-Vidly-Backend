@@ -150,7 +150,6 @@ describe('users api', () => {
 		it('returns 400 if password too short', async () => {
 			userData.password = '1'
 			const res = await exec()
-			console.log(res.text)
 			expect(res.status).toBe(400)
 			expect(res.text).toMatch(/^.*?\bpassword\b.*?\blength\b.*?$/im)
 		})

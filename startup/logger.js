@@ -1,6 +1,6 @@
 const winston = require('winston')
 winston.remove(winston.transports.Console)
-// require('winston-mongodb')
+require('winston-mongodb')
 require('express-async-errors')
 const config = require('config')
 const dbUrl = config.get('db')
@@ -30,18 +30,18 @@ const logger = winston.createLogger({
 	exitOnError: true,
 	transports: [
 		winstonConsoleLogger,
-		new winston.transports.File({ filename: 'error.log', level: 'error' })
-		// createWinstonMongoDbLogger()
+		new winston.transports.File({ filename: 'error.log', level: 'error' }),
+		createWinstonMongoDbLogger()
 	],
 	exceptionHandlers: [
 		winstonConsoleLogger,
-		new winston.transports.File({ filename: 'uncaughtExceptions.log' })
-		// createWinstonMongoDbLogger('log-uncaughtExceptions')
+		new winston.transports.File({ filename: 'uncaughtExceptions.log' }),
+		createWinstonMongoDbLogger('log-uncaughtExceptions')
 	],
 	rejectionHandlers: [
 		winstonConsoleLogger,
-		new winston.transports.File({ filename: 'unhandledRejections.log' })
-		// createWinstonMongoDbLogger('log-unhandledRejections')
+		new winston.transports.File({ filename: 'unhandledRejections.log' }),
+		createWinstonMongoDbLogger('log-unhandledRejections')
 	]
 })
 

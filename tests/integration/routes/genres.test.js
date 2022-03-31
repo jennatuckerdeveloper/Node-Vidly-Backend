@@ -77,7 +77,7 @@ describe('Tests for genres api.', () => {
 		}
 		beforeEach(async () => {
 			const validAdminUser = new User({
-				email: 'someone@email.com',
+				email: 'someone3@email.com',
 				password: '12345678',
 				name: 'T',
 				isAdmin: true
@@ -110,7 +110,7 @@ describe('Tests for genres api.', () => {
 		})
 		it('returns a 403 when user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone4@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -134,7 +134,7 @@ describe('Tests for genres api.', () => {
 		}
 		beforeEach(async () => {
 			const validAdminUser = new User({
-				email: 'someone@email.com',
+				email: 'someone4@email.com',
 				password: '12345678',
 				name: 'T',
 				isAdmin: true
@@ -170,7 +170,7 @@ describe('Tests for genres api.', () => {
 		})
 		it('returns a 403 when user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone4@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -191,7 +191,7 @@ describe('Tests for genres api.', () => {
 		}
 		beforeEach(async () => {
 			const validAdminUser = new User({
-				email: 'someone@email.com',
+				email: 'someone4@email.com',
 				password: '12345678',
 				name: 'T',
 				isAdmin: true
@@ -215,7 +215,7 @@ describe('Tests for genres api.', () => {
 		})
 		it('returns a 403 when user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone4@email.com',
 				password: '12345678',
 				name: 'T'
 			})

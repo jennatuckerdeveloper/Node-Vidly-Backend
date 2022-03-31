@@ -9,7 +9,7 @@ describe('users api', () => {
 	let token
 	let userData = {
 		name: 'T',
-		email: 'someone@email.com',
+		email: 'someone10@email.com',
 		password: 12345678
 	}
 	beforeEach(async () => {
@@ -36,7 +36,7 @@ describe('users api', () => {
 			expect(res.status).toBe(200)
 			expect(res.body).toHaveProperty('_id')
 			expect(res.body).toHaveProperty('name', 'T')
-			expect(res.body).toHaveProperty('email', 'someone@email.com')
+			expect(res.body).toHaveProperty('email', 'someone10@email.com')
 		})
 
 		it('does not send a user password ', async () => {
@@ -61,7 +61,7 @@ describe('users api', () => {
 			expect(res.status).toBe(200)
 			expect(res.body).toHaveProperty('_id')
 			expect(res.body).toHaveProperty('name', 'T')
-			expect(res.body).toHaveProperty('email', 'someone@email.com')
+			expect(res.body).toHaveProperty('email', 'someone10@email.com')
 			expect(res.body).not.toHaveProperty('password')
 			expect(res.body).toHaveProperty('isAdmin', true)
 		})
@@ -77,7 +77,7 @@ describe('users api', () => {
 		beforeEach(() => {
 			userData = {
 				name: 'L',
-				email: 'someone1@email.com',
+				email: 'someone11@email.com',
 				password: '12345678'
 			}
 		})
@@ -92,7 +92,7 @@ describe('users api', () => {
 			expect(res.status).toBe(200)
 			expect(res.body).toHaveProperty('_id')
 			expect(res.body).toHaveProperty('name', 'L')
-			expect(res.body).toHaveProperty('email', 'someone1@email.com')
+			expect(res.body).toHaveProperty('email', 'someone11@email.com')
 		})
 		it('does not send the user password ', async () => {
 			const res = await exec()
@@ -114,23 +114,11 @@ describe('users api', () => {
 			expect(jwtDecoded).toHaveProperty('iat')
 		})
 
-		it('creates a new user without isAdmin property', async () => {
+		it('cannot create a new user with an already used email', async () => {
 			await exec()
 			userData = {
 				name: 'X',
-				email: 'someone1@email.com',
-				password: '1234567890'
-			}
-			const res = await exec()
-			expect(res.status).toBe(400)
-			expect(res.text).toMatch(/^.*?\bemail\b.*?\balready\b.*?$/im)
-		})
-
-		it('creates a new user without isAdmin property', async () => {
-			await exec()
-			userData = {
-				name: 'X',
-				email: 'someone1@email.com',
+				email: 'someone11@email.com',
 				password: '1234567890'
 			}
 			const res = await exec()

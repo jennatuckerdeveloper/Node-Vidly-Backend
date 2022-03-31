@@ -15,7 +15,7 @@ describe('Tests for movies api.', () => {
 	// Generate a valid user admin auth token
 	const makeValidAdminUserAuthToken = () => {
 		const validAdminUser = new User({
-			email: 'someone@email.com',
+			email: 'someone5@email.com',
 			password: '12345678',
 			name: 'T',
 			isAdmin: true
@@ -37,7 +37,6 @@ describe('Tests for movies api.', () => {
 		const movie = await newMovie.save()
 		return { genre, movie }
 	}
-
 	// Set up for happy path
 	beforeEach(async () => {
 		server = require('../../../index.js')
@@ -166,7 +165,7 @@ describe('Tests for movies api.', () => {
 		})
 		it('returns a 403 when user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone6@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -198,7 +197,7 @@ describe('Tests for movies api.', () => {
 				dailyRentalRate: 5.0
 			}
 		})
-		it('updates a specific genere with valid data and id', async () => {
+		it('updates a specific movie with valid data and id', async () => {
 			const res = await exec()
 			expect(res.status).toBe(200)
 			expect(res.body).toHaveProperty('_id', movieId)
@@ -225,7 +224,7 @@ describe('Tests for movies api.', () => {
 		})
 		it('returns a 403 when user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone6@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -254,7 +253,7 @@ describe('Tests for movies api.', () => {
 		})
 		it('returns a 403 when user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone6@email.com',
 				password: '12345678',
 				name: 'T'
 			})

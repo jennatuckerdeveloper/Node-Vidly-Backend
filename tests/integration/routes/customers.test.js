@@ -16,7 +16,7 @@ describe('customers api', () => {
 	// Generate a valid user admin auth token
 	const makeValidAdminUserAuthToken = () => {
 		const validAdminUser = new User({
-			email: 'someone@email.com',
+			email: 'someone1@email.com',
 			password: '12345678',
 			name: 'T',
 			isAdmin: true
@@ -95,7 +95,7 @@ describe('customers api', () => {
 		})
 		it('returns 403 if user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone2@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -152,7 +152,7 @@ describe('customers api', () => {
 		})
 		it('returns 403 if user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone2@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -216,7 +216,7 @@ describe('customers api', () => {
 		})
 		it('returns 403 if user does not have admin status', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone2@email.com',
 				password: '12345678',
 				name: 'T'
 			})
@@ -264,7 +264,7 @@ describe('customers api', () => {
 		})
 		it('responds with 403 if user not admin', async () => {
 			const validUser = new User({
-				email: 'someone@email.com',
+				email: 'someone2@email.com',
 				password: '12345678',
 				name: 'T'
 			})

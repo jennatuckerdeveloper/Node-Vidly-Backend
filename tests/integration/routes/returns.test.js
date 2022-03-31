@@ -44,7 +44,7 @@ describe('Tests for returns api', () => {
 
 		const userData = {
 			name: 'T',
-			email: 'someone@email.com',
+			email: 'someone9@email.com',
 			password: 12345678
 		}
 		const user = new User(userData)
@@ -64,7 +64,7 @@ describe('Tests for returns api', () => {
 			.set('x-auth-token', token)
 			.send({ customerId, movieId })
 	}
-	it('should respect with 401 if user not signed in', async () => {
+	it('should return with 401 if user not signed in', async () => {
 		token = ''
 		const res = await exec()
 		expect(res.status).toBe(401)

@@ -1,11 +1,7 @@
 const morgan = require('morgan')
-const helmet = require('helmet')
 const logger = require('./logger')
 
 module.exports = function (app) {
-	// External middleware
-	app.use(helmet())
-
 	// Conditional external middleware
 	const env = app.get('env')
 	if (env === 'development') {

@@ -12,7 +12,7 @@ describe('Tests for genres api.', () => {
 	})
 
 	afterEach(async () => {
-		server.close()
+		await server.close()
 		await Genre.deleteMany({})
 	})
 	afterAll(async () => {

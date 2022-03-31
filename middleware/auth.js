@@ -10,7 +10,7 @@ const auth = (req, res, next) => {
 		req.user = decoded
 		return next()
 	} catch (ex) {
-		return res.status(401).send('Access denied: Invalid auth token provided.')
+		return res.status(400).send('Access denied: Invalid auth token provided.')
 	}
 }
 

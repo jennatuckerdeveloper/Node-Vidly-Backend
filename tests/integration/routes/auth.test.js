@@ -34,7 +34,7 @@ describe('users api', () => {
 		userId = user._id.toHexString()
 	})
 	afterEach(async () => {
-		server.close()
+		await server.close()
 		await User.deleteMany({})
 	})
 	afterAll(async () => {

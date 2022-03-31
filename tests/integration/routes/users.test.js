@@ -19,7 +19,7 @@ describe('users api', () => {
 		token = user.generateAuthToken()
 	})
 	afterEach(async () => {
-		server.close()
+		await server.close()
 		await User.deleteMany({})
 	})
 	afterAll(async () => {
@@ -138,7 +138,7 @@ describe('users api', () => {
 			expect(res.text).toMatch(/^.*?\bemail\b.*?\balready\b.*?$/im)
 		})
 
-		it('returns 400 when invalid movie data sent', async () => {
+		it('returns 400 when invalid user data sent', async () => {
 			userData = {}
 			const res = await exec()
 			expect(res.status).toBe(400)

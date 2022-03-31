@@ -2,19 +2,11 @@ const express = require('express')
 const router = express.Router()
 const auth = require('../../middleware/auth')
 const admin = require('../../middleware/admin')
+const validateData = require('../../middleware/validateData')
 const { Rental, rentalValidator } = require('../../db/models/Rental')
 const { Movie } = require('../../db/models/Movie')
 const { Customer } = require('../../db/models/Customer')
 const Fawn = require('fawn')
-
-const invalidRentalData = (data, res) => {
-	const dataValidation = rentalValidator(data)
-	if (dataValidation.error) {
-		res.status(400).send(dataValidation.error)
-		return true
-	}
-	return false
-}
 
 const movieFound = async (id, res) => {
 	const movie = await Movie.findById(id)
@@ -39,9 +31,8 @@ router.get('/', [auth, admin], async (req, res) => {
 	res.send(rentals)
 })
 
-router.post('/', auth, async (req, res) => {
+router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
 	const data = req.body
-	if (invalidRentalData(data, res)) return
 
 	const movieId = req.body.movieId
 	const movie = await movieFound(movieId, res)

@@ -84,7 +84,7 @@ describe('rentals api', () => {
 	})
 
 	afterEach(async () => {
-		server.close()
+		await server.close()
 		await Rental.deleteMany({})
 		await Customer.deleteMany({})
 		await Movie.deleteMany({})

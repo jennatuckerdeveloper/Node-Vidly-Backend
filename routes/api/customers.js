@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { Customer, customerValidator } = require('../../db/models/Customer')
 const validId = require('../../middleware/validId')
+const validateData = require('../../middleware/validateData')
 
 router.get('/', async (req, res) => {
 	const customers = await Customer.find({}).sort('name')
@@ -17,32 +18,28 @@ router.get('/:id', validId, async (req, res) => {
 	res.send(customer)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', validateData(customerValidator), async (req, res) => {
 	const data = req.body
-	const dataValidation = customerValidator(data)
-	if (dataValidation.error) {
-		return res.status(400).send(dataValidation.error)
-	}
 	const newCustomer = new Customer(data)
 	await newCustomer.save()
 	res.send(newCustomer)
 })
 
-router.put('/:id', validId, async (req, res) => {
-	const id = req.params.id
-	const data = req.body
-	const dataValidation = customerValidator(data)
-	if (dataValidation.error) {
-		return res.status(400).send(dataValidation.error)
+router.put(
+	'/:id',
+	[validId, validateData(customerValidator)],
+	async (req, res) => {
+		const id = req.params.id
+		const data = req.body
+		const updatedCustomer = await Customer.findByIdAndUpdate(id, data, {
+			new: true
+		})
+		if (!updatedCustomer) {
+			return res.status(404).send(`Could not update customer with id ${id}.`)
+		}
+		res.send(updatedCustomer)
 	}
-	const updatedCustomer = await Customer.findByIdAndUpdate(id, data, {
-		new: true
-	})
-	if (!updatedCustomer) {
-		return res.status(404).send(`Could not update customer with id ${id}.`)
-	}
-	res.send(updatedCustomer)
-})
+)
 
 router.delete('/:id', validId, async (req, res) => {
 	const id = req.params.id

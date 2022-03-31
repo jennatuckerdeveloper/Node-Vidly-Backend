@@ -53,7 +53,7 @@ describe('Tests for movies api.', () => {
 	})
 
 	afterEach(async () => {
-		server.close()
+		await server.close()
 		await Movie.deleteMany({})
 		await Genre.deleteMany({})
 	})

@@ -3,19 +3,11 @@ const router = express.Router()
 const auth = require('../../middleware/auth')
 const admin = require('../../middleware/admin')
 const validId = require('../../middleware/validId')
+const validateData = require('../../middleware/validateData')
 const { Movie, movieValidator } = require('../../db/models/Movie')
 const { Genre } = require('../../db/models/Genre')
 
 // resusable helpers
-
-const inValidMovieId = (id, res) => {
-	const isValid = dbIdValidator(id)
-	if (!isValid) {
-		res.status(400).send('Not a valid movie id.')
-		return true
-	}
-	return false
-}
 
 const invalidMovieData = (data, res) => {
 	const dataValidation = movieValidator(data)
@@ -58,45 +50,51 @@ router.get('/:id', validId, async (req, res) => {
 	res.send(movie)
 })
 
-router.post('/', [auth, admin], async (req, res) => {
-	const data = req.body
-	if (invalidMovieData(data, res)) return
-	const genreId = req.body.genreId
-	const genre = await genreFound(genreId, res)
-	if (!genre) return
-	const newMovie = new Movie({
-		title: data.title,
-		genre: { _id: genre._id, name: genre.name },
-		numberInStock: data.numberInStock,
-		dailyRentalRate: data.dailyRentalRate
-	})
-	await newMovie.save()
-	res.send(newMovie)
-})
-
-router.put('/:id', [auth, admin, validId], async (req, res) => {
-	const id = req.params.id
-	const data = req.body
-	if (invalidMovieData(data, res)) return
-
-	const movie = await movieFound(id, res)
-	if (!movie) return
-
-	const genreId = req.body.genreId
-	const genre = await genreFound(genreId, res)
-	if (!genre) return
-
-	const updatedMovieData = {
-		title: data.title,
-		genre: { _id: genre._id, name: genre.name },
-		numberInStock: data.numberInStock,
-		dailyRentalRate: data.dailyRentalRate
+router.post(
+	'/',
+	[auth, admin, validateData(movieValidator)],
+	async (req, res) => {
+		const data = req.body
+		const genreId = req.body.genreId
+		const genre = await genreFound(genreId, res)
+		if (!genre) return
+		const newMovie = new Movie({
+			title: data.title,
+			genre: { _id: genre._id, name: genre.name },
+			numberInStock: data.numberInStock,
+			dailyRentalRate: data.dailyRentalRate
+		})
+		await newMovie.save()
+		res.send(newMovie)
 	}
-	const updatedMovie = await Movie.findByIdAndUpdate(id, updatedMovieData, {
-		new: true
-	})
-	res.send(updatedMovie)
-})
+)
+
+router.put(
+	'/:id',
+	[auth, admin, validId, validateData(movieValidator)],
+	async (req, res) => {
+		const id = req.params.id
+		const data = req.body
+
+		const movie = await movieFound(id, res)
+		if (!movie) return
+
+		const genreId = req.body.genreId
+		const genre = await genreFound(genreId, res)
+		if (!genre) return
+
+		const updatedMovieData = {
+			title: data.title,
+			genre: { _id: genre._id, name: genre.name },
+			numberInStock: data.numberInStock,
+			dailyRentalRate: data.dailyRentalRate
+		}
+		const updatedMovie = await Movie.findByIdAndUpdate(id, updatedMovieData, {
+			new: true
+		})
+		res.send(updatedMovie)
+	}
+)
 
 router.delete('/:id', [auth, admin, validId], async (req, res) => {
 	const id = req.params.id

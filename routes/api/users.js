@@ -1,18 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../../middleware/auth')
+const validateData = require('../../middleware/validateData')
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const { User, userValidator } = require('../../db/models/User')
-
-const invalidUserData = (data, res) => {
-	const dataValidation = userValidator(data)
-	if (dataValidation.error) {
-		res.status(400).send(dataValidation.error)
-		return true
-	}
-	return false
-}
 
 const userFound = async (userData, res) => {
 	const user = await User.findOne({ email: userData.email })
@@ -28,10 +20,8 @@ router.get('/my-account', auth, async (req, res) => {
 	res.send(user)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', validateData(userValidator), async (req, res) => {
 	const data = req.body
-	if (invalidUserData(data, res)) return
-
 	const userIsFound = await userFound(data, res)
 	if (userIsFound) return
 

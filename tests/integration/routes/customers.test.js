@@ -47,7 +47,7 @@ describe('customers api', () => {
 		customerIdUrl = `${customerUrl}/${customerId}`
 	})
 	afterEach(async () => {
-		server.close()
+		await server.close()
 		await Customer.deleteMany({})
 	})
 	afterAll(async () => {

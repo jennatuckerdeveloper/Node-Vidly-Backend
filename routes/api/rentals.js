@@ -1,20 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../../middleware/auth')
-const admin = require('../../middleware/auth')
+const admin = require('../../middleware/admin')
+const validateData = require('../../middleware/validateData')
 const { Rental, rentalValidator } = require('../../db/models/Rental')
 const { Movie } = require('../../db/models/Movie')
 const { Customer } = require('../../db/models/Customer')
 const Fawn = require('fawn')
-
-const invalidRentalData = (data, res) => {
-	const dataValidation = rentalValidator(data)
-	if (dataValidation.error) {
-		res.status(400).send(dataValidation.error)
-		return true
-	}
-	return false
-}
 
 const movieFound = async (id, res) => {
 	const movie = await Movie.findById(id)
@@ -28,7 +20,7 @@ const movieFound = async (id, res) => {
 const customerFound = async (id, res) => {
 	const movie = await Customer.findById(id)
 	if (!movie) {
-		res.status(404).send(`Could not find movie with id ${id}.`)
+		res.status(404).send(`Could not find customer with id ${id}.`)
 		return false
 	}
 	return movie
@@ -39,9 +31,8 @@ router.get('/', [auth, admin], async (req, res) => {
 	res.send(rentals)
 })
 
-router.post('/', auth, async (req, res) => {
+router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
 	const data = req.body
-	if (invalidRentalData(data, res)) return
 
 	const movieId = req.body.movieId
 	const movie = await movieFound(movieId, res)
@@ -69,10 +60,14 @@ router.post('/', auth, async (req, res) => {
 	})
 
 	try {
-		new Fawn.Task()
-			.save('rentals', newRental)
-			.updateOne('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
-			.run()
+		const task = new Fawn.Task()
+		await task.save('rentals', newRental)
+		await task.update(
+			'movies',
+			{ _id: movie._id },
+			{ $inc: { numberInStock: -1 } }
+		)
+		await task.run()
 	} catch (ex) {
 		console.log(ex)
 		return res.status(500).send('Unexpected failure.')

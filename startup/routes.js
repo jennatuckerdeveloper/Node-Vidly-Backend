@@ -6,6 +6,7 @@ const genresRouter = require('../routes/api/genres')
 const customersRouter = require('../routes/api/customers')
 const moviesRouter = require('../routes/api/movies')
 const rentalsRouter = require('../routes/api/rentals')
+const returnsRouter = require('../routes/api/returns')
 const auth = require('../middleware/auth')
 const admin = require('../middleware/admin')
 const error = require('../middleware/error')
@@ -26,6 +27,7 @@ module.exports = function (app) {
 	app.use('/api/movies', moviesRouter)
 	// No endpoints avaialble not logged in
 	app.use('/api/rentals', auth, rentalsRouter)
+	app.use('/api/returns', auth, returnsRouter)
 	// No endpoints available not logged in and admin
 	app.use('/api/customers', [auth, admin], customersRouter)
 

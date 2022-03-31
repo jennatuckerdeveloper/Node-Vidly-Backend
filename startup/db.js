@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
 const Fawn = require('fawn')
 const logger = require('./logger')
-const dbUrl = 'mongodb://localhost/my-vidly'
+const config = require('config')
 
 module.exports = function () {
+	const db = config.get('db')
 	mongoose
-		.connect(dbUrl)
-		.then(() => Fawn.init(dbUrl))
-		.then(() => logger.log('info', `Connected to MongoDb at ${dbUrl}`))
+		.connect(db, { useUnifiedTopology: false })
+		.then(() => Fawn.init(db))
+		.then(() => logger.log('info', `Connected to MongoDb at ${db}`))
 }

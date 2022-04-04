@@ -5,7 +5,7 @@ name: Node.js CI
 
 env:
   vidly_jwtPrivateKey: ${{ secrets.VIDLY_JWTPRIVATEKEY }}
-  
+
 on:
   push:
     branches: [ main ]

@@ -5,7 +5,6 @@ name: Node.js CI
 
 env:
   vidly_jwtPrivateKey: ${{ secrets.VIDLY_JWTPRIVATEKEY }}
-  vidly_db: ${{ secrets.VIDLY_DB }}
   
 on:
   push:
@@ -30,7 +29,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: echo "The env value is:${{secrets.VIDLY_JWTPRIVATEKEY}}"
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test

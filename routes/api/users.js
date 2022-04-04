@@ -33,6 +33,7 @@ router.post('/', validateData(userValidator), async (req, res) => {
 	const token = newUser.generateAuthToken()
 	res
 		.header('x-auth-token', token)
+		.header('access-control-expose-headers', 'x-auth-token')
 		.send(_.pick(newUser, ['_id', 'name', 'email']))
 })
 

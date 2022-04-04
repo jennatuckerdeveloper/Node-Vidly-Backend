@@ -1,5 +1,6 @@
 {
 	"name": "Vidly API",
 	"jwtPrivateKey": "",
-	"db": "mongodb://localhost/my_vidly"
+	"db": "mongodb://localhost/my_vidly",
+	"port": "3900"
 }

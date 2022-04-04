@@ -3,6 +3,10 @@
 
 name: Node.js CI
 
+env:
+  vidly_jwtPrivateKey: ${{ secrets.VIDLY_JWTPRIVATEKEY }}
+  vidly_db: ${{ secrets.VIDLY_DB }}
+  
 on:
   push:
     branches: [ main ]

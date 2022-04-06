@@ -1,4 +1,5 @@
 const cors = require('cors')
+const config = require('config')
 
 module.exports = function (app) {
 	const whitelist = [
@@ -9,11 +10,10 @@ module.exports = function (app) {
 		origin: function (origin, callback) {
 			if (
 				whitelist.indexOf(origin) !== -1 ||
-				(!origin && process.env.NODE_ENV === 'test')
+				(!origin && process.env.NODE_ENV !== 'production')
 			) {
 				callback(null, true)
 			} else {
-				console.log('ORIGIN', origin)
 				callback(new Error('Not allowed by CORS'))
 			}
 		}

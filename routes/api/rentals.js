@@ -6,7 +6,9 @@ const validateData = require('../../middleware/validateData')
 const { Rental, rentalValidator } = require('../../db/models/Rental')
 const { Movie } = require('../../db/models/Movie')
 const { Customer } = require('../../db/models/Customer')
-const Fawn = require('fawn')
+const mongoose = require('mongoose')
+const conn = mongoose.connection
+// const Fawn = require('fawn')
 
 const movieFound = async (id, res) => {
 	const movie = await Movie.findById(id)
@@ -32,8 +34,6 @@ router.get('/', [auth, admin], async (req, res) => {
 })
 
 router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
-	const data = req.body
-
 	const movieId = req.body.movieId
 	const movie = await movieFound(movieId, res)
 	if (!movie) return
@@ -59,21 +59,41 @@ router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
 		}
 	})
 
-	try {
-		const task = new Fawn.Task()
-		await task.save('rentals', newRental)
-		await task.update(
-			'movies',
-			{ _id: movie._id },
-			{ $inc: { numberInStock: -1 } }
-		)
-		await task.run()
-	} catch (ex) {
-		console.log(ex)
-		return res.status(500).send('Unexpected failure.')
-	}
+	// try {
+	// 	const task = new Fawn.Task()
+	// 	await task.save('rentals', newRental)
+	// 	await task.update(
+	// 		'movies',
+	// 		{ _id: movie._id },
+	// 		{ $inc: { numberInStock: -1 } }
+	// 	)
+	// 	await task.run()
+	// } catch (ex) {
+	// 	console.log(ex)
+	// 	return res.status(500).send('Unexpected failure.')
+	// }
 
-	res.send(newRental)
+	const session = await conn.startSession()
+	try {
+		session.startTransaction()
+		await newRental.save({ session })
+		await Movie.findByIdAndUpdate(
+			movie._id,
+			{
+				$inc: { numberInStock: -1 }
+			},
+			{ session, new: true }
+		)
+		await session.commitTransaction()
+
+		console.log('success')
+
+		res.send(newRental)
+	} catch (error) {
+		await session.abortTransaction()
+		res.status(500).send('There was an error processing the rental.')
+	}
+	session.endSession()
 })
 
 module.exports = router

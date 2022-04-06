@@ -12,7 +12,7 @@ require('./startup/prod')(app)
 require('./startup/routes')(app)
 
 let port = process.env.PORT || config.get('port')
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test' || config.get('NODE_ENV') === 'test') {
 	port = 0
 }
 const server = app.listen(port, () => {

@@ -59,6 +59,7 @@ router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
 	})
 
 	const session = await conn.startSession()
+
 	try {
 		session.startTransaction()
 		await newRental.save({ session })
@@ -70,8 +71,6 @@ router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
 			{ session, new: true }
 		)
 		await session.commitTransaction()
-
-		console.log('success')
 
 		res.send(newRental)
 	} catch (error) {

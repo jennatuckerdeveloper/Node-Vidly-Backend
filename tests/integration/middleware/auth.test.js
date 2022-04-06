@@ -20,9 +20,10 @@ describe('auth middleware', () => {
 	afterEach(async () => {
 		await server.close()
 		await User.deleteMany({})
+	
 	})
 	afterAll(async () => {
-		await mongoose.connection.close()
+		await mongoose.disconnect()
 	})
 	const exec = async () => {
 		return await request(server)

@@ -38,7 +38,7 @@ describe('users api', () => {
 		await User.deleteMany({})
 	})
 	afterAll(async () => {
-		await mongoose.connection.close()
+		await mongoose.disconnect()
 	})
 	const exec = async () => {
 		return await request(server).post(authUrl).send(authData)

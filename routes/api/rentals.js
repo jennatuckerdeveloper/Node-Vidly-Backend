@@ -8,7 +8,6 @@ const { Movie } = require('../../db/models/Movie')
 const { Customer } = require('../../db/models/Customer')
 const mongoose = require('mongoose')
 const conn = mongoose.connection
-// const Fawn = require('fawn')
 
 const movieFound = async (id, res) => {
 	const movie = await Movie.findById(id)
@@ -58,20 +57,6 @@ router.post('/', [auth, validateData(rentalValidator)], async (req, res) => {
 			dailyRentalRate: movie.dailyRentalRate
 		}
 	})
-
-	// try {
-	// 	const task = new Fawn.Task()
-	// 	await task.save('rentals', newRental)
-	// 	await task.update(
-	// 		'movies',
-	// 		{ _id: movie._id },
-	// 		{ $inc: { numberInStock: -1 } }
-	// 	)
-	// 	await task.run()
-	// } catch (ex) {
-	// 	console.log(ex)
-	// 	return res.status(500).send('Unexpected failure.')
-	// }
 
 	const session = await conn.startSession()
 	try {

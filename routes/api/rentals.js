@@ -27,7 +27,7 @@ const customerFound = async (id, res) => {
 	return movie
 }
 
-router.get('/', [auth, admin], async (req, res) => {
+router.get('/', [auth], async (req, res) => {
 	const rentals = await Rental.find({}).sort('name')
 	res.send(rentals)
 })

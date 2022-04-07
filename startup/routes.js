@@ -18,18 +18,14 @@ module.exports = function (app) {
 
 	// custom middlware
 
-	// Not logged in
 	app.use('/', homeRouter)
 	app.use('/api/users', usersRouter)
 	app.use('/api/auth', authRouter)
-	// Some endpoints available not logged in
 	app.use('/api/genres', genresRouter)
 	app.use('/api/movies', moviesRouter)
-	// No endpoints avaialble not logged in
-	app.use('/api/rentals', auth, rentalsRouter)
-	app.use('/api/returns', auth, returnsRouter)
-	// No endpoints available not logged in and admin
-	app.use('/api/customers', [auth, admin], customersRouter)
+	app.use('/api/rentals', rentalsRouter)
+	app.use('/api/returns', returnsRouter)
+	app.use('/api/customers', customersRouter)
 
 	// error handling middleware
 	app.use(error(logger))

@@ -1,15 +1,17 @@
 const express = require('express')
 const router = express.Router()
+const auth = require('../../middleware/auth')
+const admin = require('../../middleware/admin')
 const { Customer, customerValidator } = require('../../db/models/Customer')
 const validId = require('../../middleware/validId')
 const validateData = require('../../middleware/validateData')
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
 	const customers = await Customer.find({}).sort('name')
 	res.send(customers)
 })
 
-router.get('/:id', validId, async (req, res) => {
+router.get('/:id', [auth, validId], async (req, res) => {
 	const id = req.params.id
 	const customer = await Customer.findById(id)
 	if (!customer) {
@@ -18,16 +20,20 @@ router.get('/:id', validId, async (req, res) => {
 	res.send(customer)
 })
 
-router.post('/', validateData(customerValidator), async (req, res) => {
-	const data = req.body
-	const newCustomer = new Customer(data)
-	await newCustomer.save()
-	res.send(newCustomer)
-})
+router.post(
+	'/',
+	[auth, admin, validateData(customerValidator)],
+	async (req, res) => {
+		const data = req.body
+		const newCustomer = new Customer(data)
+		await newCustomer.save()
+		res.send(newCustomer)
+	}
+)
 
 router.put(
 	'/:id',
-	[validId, validateData(customerValidator)],
+	[auth, admin, validId, validateData(customerValidator)],
 	async (req, res) => {
 		const id = req.params.id
 		const data = req.body
@@ -41,7 +47,7 @@ router.put(
 	}
 )
 
-router.delete('/:id', validId, async (req, res) => {
+router.delete('/:id', [auth, admin, validId], async (req, res) => {
 	const id = req.params.id
 	const deletedCustomer = await Customer.findByIdAndDelete(id)
 	if (!deletedCustomer) {

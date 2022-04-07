@@ -93,17 +93,6 @@ describe('customers api', () => {
 			expect(res.status).toBe(401)
 			expect(true).toBe(true)
 		})
-		it('returns 403 if user does not have admin status', async () => {
-			const validUser = new User({
-				email: 'someone2@email.com',
-				password: '12345678',
-				name: 'T'
-			})
-			token = validUser.generateAuthToken()
-			const res = await exec()
-			expect(res.status).toBe(403)
-			expect(res.text).toMatch(/^.*?\b(no)(?:(|t)?)\b.*?\badmin\b.*?$/im)
-		})
 	})
 
 	describe('POST', () => {
